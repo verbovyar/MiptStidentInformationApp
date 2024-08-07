@@ -1,1 +1,1 @@
-# MiptStidentInformationApp
+# Crud project
