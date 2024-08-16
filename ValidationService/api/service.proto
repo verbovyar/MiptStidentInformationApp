@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+option go_package = "api/ValidationApiPb";
+
+service ValidationService {
+  rpc Create(CreateRequest) returns (CreateResponse) {
+  }
+
+  rpc Read(ReadRequest) returns (ReadResponse) {
+  }
+
+  rpc Update(UpdateRequest) returns (UpdateResponse) {
+  }
+
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Create endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+message CreateRequest {
+  string first_name  = 1;
+  string second_name = 2;
+  uint32 age         = 3;
+  string faculty     = 4;
+  uint32 hostel      = 5;
+  uint32 room        = 6;
+}
+message CreateResponse {
+  uint64 id = 1;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Read endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+message ReadRequest {}
+message ReadResponse {
+  repeated Student students = 1;
+
+  message Student {
+    string first_name  = 1;
+    string second_name = 2;
+    uint32 age         = 3;
+    string faculty     = 4;
+    uint32 hostel      = 5;
+    uint32 room        = 6;
+    uint64 id          = 7;
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Update endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+message UpdateRequest {
+  string first_name  = 1;
+  string second_name = 2;
+  uint32 age         = 3;
+  string faculty     = 4;
+  uint32 hostel      = 5;
+  uint32 room        = 6;
+  uint64 id          = 7;
+}
+message UpdateResponse {
+  uint64 id = 1;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Delete endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+message DeleteRequest {
+  uint64 id = 1;
+}
+message DeleteResponse {
+  uint64 id = 1;
+}

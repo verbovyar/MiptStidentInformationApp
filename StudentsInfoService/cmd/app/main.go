@@ -6,5 +6,7 @@ import (
 
 func main() {
 	repo := app.RunRepo()
-	app.RunHttp(repo)
+	app.RunKafka(repo)
+	go app.RunHttp(repo)
+	app.RunGrpc()
 }

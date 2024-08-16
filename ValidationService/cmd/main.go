@@ -3,5 +3,6 @@ package main
 import "Application/ValidationService/internal/app"
 
 func main() {
-	app.RunHttp()
+	go app.RunHttp()
+	app.RunGrpc()
 }

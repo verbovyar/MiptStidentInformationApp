@@ -4,7 +4,6 @@ import (
 	"StudentsInfoService/internal/domain"
 	"StudentsInfoService/internal/repositories/db"
 	"encoding/json"
-	"github.com/IBM/sarama"
 	"github.com/gorilla/mux"
 	"io"
 	"log"
@@ -12,20 +11,16 @@ import (
 )
 
 type Handlers struct {
-	Router        *mux.Router
-	Data          *db.StudentsRepository
-	Producer      *sarama.SyncProducer
-	ConsumerGroup *sarama.ConsumerGroup
+	Router *mux.Router
+	Data   *db.StudentsRepository
 }
 
-func New(repo *db.StudentsRepository, producer *sarama.SyncProducer, consumerGroup *sarama.ConsumerGroup) *Handlers {
+func New(repo *db.StudentsRepository) *Handlers {
 	h := &Handlers{}
 
 	router := mux.NewRouter()
 	h.Router = router
 	h.Data = repo
-	h.Producer = producer
-	h.ConsumerGroup = consumerGroup
 
 	// может принимать регулярку в path, вместо корневого пути
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

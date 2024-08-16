@@ -131,3 +131,7 @@ func (user *Student) GetHostel() uint {
 func (user *Student) GetRoom() uint {
 	return user.Room
 }
+
+func (user *Student) GetId() uint {
+	return user.Id
+}

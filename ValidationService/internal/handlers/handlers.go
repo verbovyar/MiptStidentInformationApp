@@ -4,7 +4,7 @@ import (
 	"Application/ValidationService/internal/domain"
 	"Application/ValidationService/utils"
 	"encoding/json"
-	"github.com/IBM/sarama"
+	"github.com/Shopify/sarama"
 	"github.com/gorilla/mux"
 	"io"
 	"log"
@@ -13,11 +13,11 @@ import (
 
 type Handlers struct {
 	Router   *mux.Router
-	Producer *sarama.SyncProducer
-	Consumer *sarama.Consumer
+	Producer sarama.SyncProducer
+	Consumer sarama.Consumer
 }
 
-func New(producer *sarama.SyncProducer, consumer *sarama.Consumer) *Handlers {
+func New(producer sarama.SyncProducer, consumer sarama.Consumer) *Handlers {
 	h := &Handlers{}
 	router := mux.NewRouter()
 	h.Router = router
@@ -61,13 +61,38 @@ func (h *Handlers) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = utils.CreateValidation(student); err != nil {
-		w.Write([]byte(err.Error()))
+		w.Write([]byte("Неверные данные"))
 		return
 	}
 
-	// TODO Kafka Create
+	msg := &sarama.ProducerMessage{
+		Topic:     "AddRequest",
+		Partition: -1,
+		Value:     sarama.ByteEncoder(body),
+	}
+	_, _, err = h.Producer.SendMessage(msg)
+	if err != nil {
+		//TODO Logger
+		error.Error(err)
+	}
+
+	//time.Sleep(time.Second * 2)
+	log.Println("TAG1")
+	claim, err := h.Consumer.ConsumePartition("AddResponse", 0, sarama.OffsetOldest)
+	if err != nil {
+		//TODO Logger
+		error.Error(err)
+	}
+
+	log.Println("TAG2")
+	select {
+	case err = <-claim.Errors():
+		log.Println(err)
+	default:
+	}
 
 	w.Write([]byte("Юзер успешно добавлен"))
+	log.Println("TAG3")
 }
 
 // Read ------------------------
